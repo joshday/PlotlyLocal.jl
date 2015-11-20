@@ -7,7 +7,7 @@ The main function defined in this package is `plot(data, layout)`.
 
 Plotly plots are fully specified by
 
-- `data`: `Vector` of `Dict`s
+- `data`: `Vector` of `Dict`s, each represents a trace
 - `layout`: `Dict`  
 
 They keys inside of the dictionaries need to match the attributes from the Plotly documentation:
