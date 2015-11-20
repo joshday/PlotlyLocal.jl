@@ -1,13 +1,12 @@
 module PlotlyLocal
 
-using Mustache, Colors
-import JSON
+import Mustache, JSON
 export Plot
 
 const plotlylocal = Pkg.dir("PlotlyLocal", "deps", "plotly-latest.min.js")
 const plotlylatest = "https://cdn.plot.ly/plotly-latest.min.js"
 
-const html_template = mt"""
+const html_template = Mustache.@mt_str """
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,7 +40,7 @@ end
 function writehtml(p::Plot; verbose::Bool = true)
     mypath = string(tempname(), "tempfile.html")
 
-    myhtml = render(
+    myhtml = Mustache.render(
         html_template,
         plotlysource = JSON.json(p.plotlysource),
         data = JSON.json(p.data),
