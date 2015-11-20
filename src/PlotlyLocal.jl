@@ -53,7 +53,6 @@ function writehtml(p::Plot; verbose::Bool = true)
     close(outfile)
 
     verbose && println(myhtml)
-    # open file
     open_file(mypath)
 end
 
@@ -72,4 +71,4 @@ end
 end # module
 
 
-# include("../test/testcode.jl")
+include("../test/testcode.jl")
