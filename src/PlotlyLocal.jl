@@ -1,10 +1,9 @@
 module PlotlyLocal
 
 import Mustache, JSON
-export PlotlyVis, layout!, data!
+export PlotlyVis, layout, layout!, data, data!, surface, plot
 
 const plotlylocal = Pkg.dir("PlotlyLocal", "deps", "plotly-latest.min.js")
-const plotlylatest = "https://cdn.plot.ly/plotly-latest.min.js"
 
 const html_template = Mustache.@mt_str """
 <!DOCTYPE html>
@@ -25,25 +24,20 @@ const html_template = Mustache.@mt_str """
 </html>
 """
 
-
+#--------------------------------------------------------------------# PlotlyVis
 type PlotlyVis
     data::Vector{Dict}         # vector of traces
-    layout::Dict               # completely optional
-    plotlysource::ASCIIString  # plotlylocal or plotlylatest
-
-    function PlotlyVis(data, layout)
-        new(data, layout, plotlylocal)
-    end
+    layout::Dict               # optional, can be empty
 end
 
-"Add/change keys for `p.layout::Dict`"
+#-----------------------------------------------------------------------# layout
 function layout!(p::PlotlyVis; kw...)
     for k in kw
         p.layout[k[1]] = k[2]
     end
 end
 
-"Add/change keys for the i-th trace in `p.data`"
+#-------------------------------------------------------------------------# data
 function data!(p::PlotlyVis, i::Int; kw...)
     @assert i <= length(p.data)
     for k in kw
@@ -51,6 +45,12 @@ function data!(p::PlotlyVis, i::Int; kw...)
     end
 end
 
+#-------------------------------------------------------------------------# plot
+function plot{T<:Associative}(data::Vector{T}, layout::Associative)
+    p = PlotlyVis(data, layout)
+    writehtml(p)
+    p
+end
 
 
 #---------------------------------------------------------------# write and open
@@ -59,7 +59,7 @@ function writehtml(p::PlotlyVis, dest::AbstractString = tempname(); verbose::Boo
 
     myhtml = Mustache.render(
         html_template,
-        plotlysource = JSON.json(p.plotlysource),
+        plotlysource = plotlylocal,
         data = JSON.json(p.data),
         layout = JSON.json(p.layout)
     )
@@ -80,9 +80,7 @@ function open_file(filename)
     warn("Unknown OS... cannot open browser window.")
 end
 
-include("plot.jl")
-
 end # module
 
 
-include("../test/testcode.jl")
+# include("../test/testcode.jl")
