@@ -32,7 +32,7 @@ plot(data, layout)
 
 The dictionary structure will look something like this when converted to JSON:
 
-```json
+```
 var data = [
   {
     y: [0.118431, 0.660444, ...]
