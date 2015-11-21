@@ -10,7 +10,7 @@ Plotly plots are fully specified by
 - `data`: `Vector` of `Dict`s, each represents a trace
 - `layout`: `Dict`  
 
-They keys inside of the dictionaries need to match the attributes from the Plotly documentation:
+They keys inside of the dictionaries need to match the attributes from the Plotly documentation.  Each JSON object is created by a Julia `Dict`, so nested objects are created by nested `Dict`s.
 
 - https://plot.ly/javascript/reference/
 
