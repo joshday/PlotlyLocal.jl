@@ -29,3 +29,23 @@ layout = Dict(:title => "My Title")
 
 plot(data, layout)
 ```
+
+The dictionary structure will look something like this when converted to JSON:
+
+```json
+var data = [
+  {
+    y: [0.118431, 0.660444, ...]
+  },
+  {
+    y: [0.87696, 0.385333, ...],
+    marker: {
+      color: "000000"
+    }
+  }
+]
+
+var layout = {
+  title: "My Title"
+}
+```
