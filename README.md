@@ -49,3 +49,6 @@ var layout = {
   title: "My Title"
 }
 ```
+
+# Thanks
+A big thank you to the folks at [Plotly](https://plot.ly) for going open source!
