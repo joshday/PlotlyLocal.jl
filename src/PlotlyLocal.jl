@@ -1,7 +1,7 @@
 module PlotlyLocal
 
 import JSON
-export PlotlyVis, layout, layout!, data, data!, surface, plot
+export PlotlyVis, layout, layout!, data, data!, surface, plot, plot!
 
 const plotlylocal = Pkg.dir("PlotlyLocal", "deps", "plotly-latest.min.js")
 
@@ -19,6 +19,7 @@ function layout!(p::PlotlyVis; kw...)
 end
 
 #-------------------------------------------------------------------------# data
+# Edit a trace
 function data!(p::PlotlyVis, i::Int; kw...)
     @assert i <= length(p.data)
     for k in kw
@@ -26,12 +27,21 @@ function data!(p::PlotlyVis, i::Int; kw...)
     end
 end
 
+# Add a trace
+function data!(p::PlotlyVis, trace::Associative)
+    push!(p.data, trace)
+end
+
+
+
 #-------------------------------------------------------------------------# plot
 function plot{T<:Associative}(data::Vector{T}, layout::Associative)
     p = PlotlyVis(data, layout)
     writehtml(p)
     p
 end
+
+plot!(p::PlotlyVis) = writehtml(p)
 
 
 #---------------------------------------------------------------# write and open
