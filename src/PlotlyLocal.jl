@@ -1,6 +1,6 @@
 module PlotlyLocal
 
-import Mustache, JSON
+import JSON
 export PlotlyVis, layout, layout!, data, data!, surface, plot
 
 const plotlylocal = Pkg.dir("PlotlyLocal", "deps", "plotly-latest.min.js")
