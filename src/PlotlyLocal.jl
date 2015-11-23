@@ -5,25 +5,6 @@ export PlotlyVis, layout, layout!, data, data!, surface, plot
 
 const plotlylocal = Pkg.dir("PlotlyLocal", "deps", "plotly-latest.min.js")
 
-const html_template = Mustache.@mt_str """
-<!DOCTYPE html>
-<html>
-<head>
-  <title>PlotlyLocal Visualization</title>
-  <script src = {{{:plotlysource}}}></script>
-</head>
-
-<body>
-  <div id="div1">
-  <script>
-    var data = {{{:data}}}
-    var layout = {{{:layout}}}
-    Plotly.newPlot('div1', data, layout);
-  </script>
-</body>
-</html>
-"""
-
 #--------------------------------------------------------------------# PlotlyVis
 type PlotlyVis
     data::Vector{Dict}         # vector of traces
@@ -57,12 +38,24 @@ end
 function writehtml(p::PlotlyVis, dest::AbstractString = tempname(); verbose::Bool = false)
     mypath = string(dest, "tempfile.html")
 
-    myhtml = Mustache.render(
-        html_template,
-        plotlysource = plotlylocal,
-        data = JSON.json(p.data),
-        layout = JSON.json(p.layout)
-    )
+    myhtml = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>PlotlyLocal Visualization</title>
+      <script src = "$plotlylocal"></script>
+    </head>
+
+    <body>
+      <div id="div1">
+      <script>
+        var data = $(JSON.json(p.data))
+        var layout = $(JSON.json(p.layout))
+        Plotly.newPlot('div1', data, layout);
+      </script>
+    </body>
+    </html>
+    """
 
     touch(mypath)
     outfile = open(mypath, "w")
@@ -83,4 +76,4 @@ end
 end # module
 
 
-# include("../test/testcode.jl")
+include("../test/testcode.jl")
