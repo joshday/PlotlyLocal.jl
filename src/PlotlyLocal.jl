@@ -1,7 +1,7 @@
 module PlotlyLocal
 
 import JSON
-export PlotlyVis, layout, layout!, data, data!, surface, plot, plot!
+export PlotlyVis, layout, layout!, data, data!, plot, plot!
 
 const plotlylocal = Pkg.dir("PlotlyLocal", "deps", "plotly-latest.min.js")
 
@@ -11,27 +11,19 @@ type PlotlyVis
     layout::Dict               # optional, can be empty
 end
 
+
 #-----------------------------------------------------------------------# layout
-function layout!(p::PlotlyVis; kw...)
-    for k in kw
-        p.layout[k[1]] = k[2]
-    end
-end
+layout!(p::PlotlyVis, d::Associative) = merge!(p.layout, d)
+layout!(p::PlotlyVis; kw...) = layout!(p, Dict(kw))
+
 
 #-------------------------------------------------------------------------# data
-# Edit a trace
-function data!(p::PlotlyVis, i::Int; kw...)
-    @assert i <= length(p.data)
-    for k in kw
-        p.data[i][k[1]] = k[2]
-    end
-end
+# Edit the i-th trace
+data!(p::PlotlyVis, i::Int, d::Associative) = merge!(p.data[i], d)
+data!(p::PlotlyVis, i::Int; kw...) = merge!(p.data[i], Dict(kw))
 
-# Add a trace
-function data!(p::PlotlyVis, trace::Associative)
-    push!(p.data, trace)
-end
-
+# Add a new trace
+data!(p::PlotlyVis, trace::Associative) = push!(p.data, trace)
 
 
 #-------------------------------------------------------------------------# plot
@@ -41,6 +33,7 @@ function plot{T<:Associative}(data::Vector{T}, layout::Associative)
     p
 end
 
+# refresh plot after changes
 plot!(p::PlotlyVis) = writehtml(p)
 
 
@@ -84,6 +77,3 @@ function open_file(filename)
 end
 
 end # module
-
-
-# include("../test/testcode.jl")
