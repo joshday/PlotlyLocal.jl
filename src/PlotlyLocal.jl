@@ -1,7 +1,7 @@
 module PlotlyLocal
 
 import JSON
-export PlotlyVis, layout, layout!, data, data!, plot, plot!
+export PlotlyVis, layout, layout!, data, data!, plot, plot!, iplot
 
 const plotlylocal = Pkg.dir("PlotlyLocal", "deps", "plotly-latest.min.js")
 
@@ -74,6 +74,33 @@ function open_file(filename)
     @linux_only return run(`xdg-open $(filename)`)
     @windows_only return run(`$(ENV["COMSPEC"]) /c start $(filename)`)
     warn("Unknown OS... cannot open browser window.")
+end
+
+#-------------------------------------------------------------------------# iplot
+function iplot{T<:Associative}(data::Vector{T}, layout::Associative)
+    p = PlotlyVis(data, layout)
+
+    init_notebook_mode = """
+    <script type="text/javascript">
+        require=requirejs=define=undefined;
+    </script>
+    <script type="text/javascript">
+        $(readall(PlotlyLocal.plotlylocal))
+    </script>
+    """
+
+    myhtml = """
+    <div class="div1 loading"> Drawing...</div>
+    <div id="div1"></div>
+    <script type="text/javascript">
+        var data = $(JSON.json(p.data))
+        var layout = $(JSON.json(p.layout))
+        Plotly.newPlot('div1', data, layout);
+        \$(".div1.loading").remove();
+  </script>
+  """
+
+  Base.HTML(init_notebook_mode * myhtml)
 end
 
 end # module
