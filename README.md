@@ -30,6 +30,8 @@ layout = Dict(:title => "My Title")
 plot(data, layout)
 ```
 
+To plot inline within [Jupyter notebooks](http://jupyter.org/) use the `iplot` method in place of `plot`.
+
 The dictionary structure will look something like this when converted to JSON:
 
 ```
