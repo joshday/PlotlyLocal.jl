@@ -79,6 +79,7 @@ end
 #-------------------------------------------------------------------------# iplot
 function iplot{T<:Associative}(data::Vector{T}, layout::Associative)
     p = PlotlyVis(data, layout)
+    id = Base.Random.uuid4()
 
     init_notebook_mode = """
     <script type="text/javascript">
@@ -90,17 +91,17 @@ function iplot{T<:Associative}(data::Vector{T}, layout::Associative)
     """
 
     myhtml = """
-    <div class="div1 loading"> Drawing...</div>
-    <div id="div1"></div>
+    <div class="$id loading"> Drawing...</div>
+    <div id="$id"></div>
     <script type="text/javascript">
         var data = $(JSON.json(p.data))
         var layout = $(JSON.json(p.layout))
-        Plotly.newPlot('div1', data, layout);
-        \$(".div1.loading").remove();
+        Plotly.newPlot('$id', data, layout);
+        \$(".$id.loading").remove();
   </script>
   """
 
-  Base.HTML(init_notebook_mode * myhtml)
+  display(Base.HTML(init_notebook_mode * myhtml))
 end
 
 end # module
